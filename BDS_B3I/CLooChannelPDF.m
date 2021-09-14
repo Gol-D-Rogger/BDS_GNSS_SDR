@@ -1,5 +1,5 @@
-close all;
-clear all; 
+% close all;
+% clear all; 
 N = 100000; 
 u = -0.932; 
 sigma1 = 0.376; 

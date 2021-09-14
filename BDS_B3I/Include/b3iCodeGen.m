@@ -8,7 +8,7 @@ reg2_ini = [5631;7723;6026;8187;6431;4708;8146;7677;5122;1051;...
     4148;3033;3516;6769;1826;2757;5094;8008; 329;4268;...
     7756;2447;  24;4100;1702;5702;3704;1482;6646;4677;...
     3616;1602;1102];
-reg2_ini = bsxfun(@bitget,reg2_ini,13:-1:1);%得到二进制相位表
+reg2_ini = bsxfun(@bitget,reg2_ini,13:-1:1)';%得到二进制相位表
 code = false(10230,numPRNs);
 % 生成多项式系数
 
@@ -17,13 +17,15 @@ reg2_FeedbackPos = [1,5,6,7,9,10,12,13];
 reset_index = 8190;
 for i = 1:numPRNs
     reg1 = reg1_ini;
-    reg2 = reg2_ini(PRNs(i),:);
+    reg2 = reg2_ini(:,PRNs(i));
     for j = 1:10230
         code(j,i) = arrayXor([reg1(end) reg2(end)]);
         reg1(end) = arrayXor(reg1(reg1_FeedbackPos));
         reg2(end) = arrayXor(reg2(reg2_FeedbackPos));
         reg1 = circshift(reg1,1);
-        reg2 = circshift(reg2,1);
+        reg2 = circshift(reg2,1);%matlab R2019b
+%         reg1 = circshift(reg1,[1,0]);
+%         reg2 = circshift(reg2,[0,1]);%matlab R2016b
         if j == reset_index
             reg1 = reg1_ini;
         end

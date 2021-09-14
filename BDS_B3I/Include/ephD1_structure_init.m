@@ -48,4 +48,15 @@ eph.omega   = [];       %32bit twosComp 2^-31
 %% ===== Decode the fourth subframe ==================================
 % The almanac parameters ----------------------------------------------
 % eph.pnum
-Almanac = struct('');
+eph.Almanac.SOW = [];
+eph.Almanac.sqrtA = [];
+eph.Almanac.a1 = [];
+eph.Almanac.a0 = [];
+eph.Almanac.Omega_0 = [];
+eph.Almanac.e = [];
+eph.Almanac.delta_i = [];
+eph.Almanac.t_oa = [];
+eph.Almanac.Omega_dot = [];
+eph.Almanac.omega = [];
+eph.Almanac.M_0 = [];
+eph.Almanac.AmEpID = [];
