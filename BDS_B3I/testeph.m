@@ -17,4 +17,4 @@ function bin = hexstr2bin(hex)
        bin = [bin num2str(navinbin(i))]; 
     end
 end
-%test git
+%test in 9.15
