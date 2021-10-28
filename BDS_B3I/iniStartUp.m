@@ -11,8 +11,8 @@ pb3i = -163;   % -163 dBW
 global settings;
 settings = iniSettings();
 b3i = D1NavMsgEncode(PRN,pb3i);
-% tice
-% recvSignal = basicChannel(b3i);
-% toc
-eph = ephD1_structure_init();
-[eph,SOW] = ephD1(b3i,eph);
+
+recvSignal = basicChannel(b3i);
+
+% eph = ephD1_structure_init();
+% [eph,SOW] = ephD1(b3i,eph);
