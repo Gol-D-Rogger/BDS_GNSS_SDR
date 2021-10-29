@@ -1,4 +1,4 @@
-function [eph, SOW] = ephD1(bits,eph)
+function [eph, SOW] = ephD1(bits)
 %% Check if there is enough data ==========================================
 % if length(bits) < 1500
 %     error('The parameter BITS must contain 1500 bits!');
@@ -22,6 +22,7 @@ for i = 1 : length(bits)/300
 %     end
 %     [subframe(16:30),~] = BCH(subframe(16:30)');
     %--- deinterleave --------------------------
+    subframe = zeros(1,300);
     subframe(1:30) = subframe_ori(1:30);
     for j = 2:10
         subframe(30*(j-1)+1 : 30*j) = deinterleave(subframe_ori(30*(j-1)+1 : 30*j));
@@ -29,7 +30,7 @@ for i = 1 : length(bits)/300
     %---- BCH Decode -------------------------------------------
     for jj = 2 :20
         codeout = BCH15_4Decode(subframe(15*(jj-1)+1 : 15*jj));
-        subframe(15*(jj-1)+1 : 15*jj) = num2str(double(codeout'))';%codeout;
+        subframe(15*(jj-1)+1 : 15*jj) = (double(codeout'))';%codeout;
     end
     subframe = num2str(subframe')';
     %--- Decode the sub-frame id ------------------------------------------
