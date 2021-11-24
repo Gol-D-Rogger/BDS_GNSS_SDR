@@ -44,27 +44,4 @@ for i_navStart = 0 : 299
 end
 
 
-
-% bits = navBin(1 + searchStartOffset : end);
-
-% xcorrResult = xcorr(bits, preamble_bits);
-
-% clear index
-% xcorrLength = (length(xcorrResult) + 1) / 2;
-% index = find(abs(xcorrResult(xcorrLength : xcorrLength * 2 - 1)) > 4)';
-
-
-% for i = 1 : size(index)
-%     if ((length(bit) - index(i) +1) >= 300*5)
-%         temp_bits = bits(index(i):index(i)+1500-1);
-
-%         if (~isequal(temp_bits(1:11),preamble_bits))
-%             temp_bits = ~temp_bits;
-%         end
-
-        
-%     end
-% end
-
-
 toc

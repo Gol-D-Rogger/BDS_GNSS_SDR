@@ -19,7 +19,7 @@ for i = 1 : length(bits)/300
     subframe_ori = bits(300*(i-1)+1 : 300*i);
 %     if (subframe(1:11)*preamble_bits < 5)
 %         subframe = ~subframe;
-%     end
+%     endq
 %     [subframe(16:30),~] = BCH(subframe(16:30)');
     %--- deinterleave --------------------------
     subframe = zeros(1,300);

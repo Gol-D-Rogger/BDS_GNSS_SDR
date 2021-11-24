@@ -1,4 +1,4 @@
-function [codeout] = BCH15_4Decode(navmsg)
+function [codeout] = BCH15_4DecodeParallel(navmsg)
     if ischar(navmsg)   %若输入值为字符串则转化为整型数字
         navmsg = navmsg - '0';
     end
@@ -17,16 +17,27 @@ function [codeout] = BCH15_4Decode(navmsg)
                 [0 1 0 0 0 0 0 0 0 0 0 0 0 0 0];...
                 [0 0 0 1 0 0 0 0 0 0 0 0 0 0 0];...
                 [0 0 1 0 0 0 0 0 0 0 0 0 0 0 0]];
-    D3=0;D2=0;D1=0;D0=0;
-    for i = 1 : length(navmsg)
-        tempbit = D3;
-        D3 = D2;
-        D2 = D1;
-        D1 = xor(D0,tempbit);
-        D0 = xor(navmsg(i),tempbit);
+    H = [1 1 1 1 0 1 0 1 1 0 0 1 0 0 0;...
+         0 1 1 1 1 0 1 0 1 1 0 0 1 0 0;...
+         0 0 1 1 1 1 0 1 0 1 1 0 0 1 0;...
+         1 1 1 0 1 0 1 1 0 0 1 0 0 0 1];    %校验矩阵
+
+    a = navmsg;
+
+    s3 = arrayXor([a(12) a(9) a(8) a(6) a(4) a(3) a(2) a(1)]);
+    s2 = arrayXor([a(13) a(10) a(9) a(7) a(5) a(4) a(3) a(2)]);
+    s1 = arrayXor([a(14) a(11) a(10) a(8) a(6) a(5) a(4) a(3)]);
+    s0 = arrayXor([a(15) a(11) a(8) a(7) a(5) a(3) a(2) a(1)]);
+    S = [s3 s2 s1 s0];
+
+    pos = bin2dec(num2str(S));
+    codeout = xor(a,erectRom(pos+1,:));
+end
+
+function res = arrayXor(X)
+    res = false;
+    for ii = 1:numel(X)
+        res = xor(res,X(ii));
     end
-    D = [D3 D2 D1 D0];
-    pos = bin2dec(num2str(D));
-    codeout = xor(navmsg,erectRom(pos+1,:));
 end
 
