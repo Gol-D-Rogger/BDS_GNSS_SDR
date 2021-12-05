@@ -19,13 +19,13 @@ end
 % end
 % navBin = (double(navBin) - '0');
 
-lineIndex = 1;
+lineIndex = 0;
 lineInterval = 5;
 navExtract = fopen('navInHex.txt','wt');
 while ~feof(navFile)
 	line = fgetl(navFile);
 	lineSplit = strsplit(line);
-	if mod(lineIndex,5) == 0
+	if mod(lineIndex,10) == 0
 		navFrameHex = cell2mat(lineSplit(end));
         navFrameBin = hexstr2bin(navFrameHex(1:75));
 		fprintf(navExtract, "%s\n", navFrameBin);
