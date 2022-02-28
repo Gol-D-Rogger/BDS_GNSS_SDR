@@ -1,5 +1,5 @@
 ebno_vec = 2:1:8;
-max_runs = 10000;
+max_runs = 1000;
 N=255;
 k=239;  
 qnumber=[2,4];%最不可靠位数
@@ -45,31 +45,31 @@ for i_runs = 1 : max_runs
         for v=1:1:length(qnumber)
             qnum=qnumber(v);
             y2=abs(real(y0));%判断不可靠位
-            lq=zeros(1,qnum); %不可靠位的位置
+            leastReliablePos=zeros(1,qnum); %不可靠位的位置
             for i=1:qnum
-                lq(i)=find(y2==min(y2));
-                y2(lq(i))=10;
+                leastReliablePos(i)=find(y2==min(y2));
+                y2(leastReliablePos(i))=10;
             end
         
-            tq=zeros(2^qnum,N+1);%构造测试序列
+            testSeq=zeros(2^qnum,N+1);%构造测试序列
             for i=1:2^qnum
-                tq(i,:)=y1;
+                testSeq(i,:)=y1;
                 for u=1:qnum
                     tiu=mod(floor((i-1)/(2^(u-1))),2);
-                    tq(i,lq(u))=bitxor(tq(i,lq(u)),tiu);
+                    testSeq(i,leastReliablePos(u))=bitxor(testSeq(i,leastReliablePos(u)),tiu);
                 end
             end
         
             cq=zeros(2^qnum,k);%bch码测试序列
-            l_yc=zeros(2^qnum,1);%计算欧式距离
+            d_eu=zeros(2^qnum,1);%计算欧式距离
             y3=(1-real(y0))./2;
             for i=1:2^qnum
-                [cq(i,:),err]=pbchdec(tq(i,:),N,k);
+                [cq(i,:),err]=pbchdec(testSeq(i,:),N,k);
                 %判断译码是否合法
                 if err==1
                     cq(i,:)=zeros(1,k);
                 end
-                l_yc(i,1)=sum(sqrt((cq(i,:)-y3(1:k)).^2));
+                d_eu(i,1)=sum(sqrt((cq(i,:)-y3(1:k)).^2));
             end
             
             if sum(sum(cq))==0  %如果全部不合法
@@ -77,7 +77,7 @@ for i_runs = 1 : max_runs
                 error_bit=biterr(msg, c0(1:k));
                 ber_v(v,i_ebno)=error_bit/k;
             else %译码合法
-                lc=find(l_yc==min(l_yc)); 
+                lc=find(d_eu==min(d_eu)); 
                 c=cq(lc(1),1:k);%译码结果为欧式距离最小的序列
                 %chase译码误码率
                 error_bit=biterr(msg, c);

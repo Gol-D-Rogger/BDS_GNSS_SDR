@@ -1,7 +1,7 @@
 function [codeout] = BCH15_4Decode(navmsg)
-    if ischar(navmsg)   %若输入值为字符串则转化为整型数字
-        navmsg = navmsg - '0';
-    end
+%     if ischar(navmsg)   %若输入值为字符串则转化为整型数字
+%         navmsg = navmsg - '0';
+%     end
     erectRom = [[0 0 0 0 0 0 0 0 0 0 0 0 0 0 0];...
                 [0 0 0 0 0 0 0 0 0 0 0 0 0 0 1];...
                 [0 0 0 0 0 0 0 0 0 0 0 0 0 1 0];...

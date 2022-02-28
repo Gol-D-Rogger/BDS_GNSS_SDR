@@ -1,7 +1,7 @@
-function output = SPA_Decoder(input_frame,H)
+function output = BDBCH_SPA(input_frame,H)
 
 success = 0; % decoding stopping condition
-max_iterations = 5; 
+max_iterations = 10; 
 current_iteration = 1;
 SBR = 1.25;
 

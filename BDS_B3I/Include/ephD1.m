@@ -1,8 +1,8 @@
 function [eph, SOW] = ephD1(bits)
 %% Check if there is enough data ==========================================
-% if length(bits) < 1500
-%     error('The parameter BITS must contain 1500 bits!');
-% end
+if length(bits) < 1500
+    error('The parameter BITS must contain 1500 bits!');
+end
 
 %% Check if the parameters are strings ====================================
 % if ~ischar(navBitsBin)
@@ -17,9 +17,9 @@ for i = 1 : length(bits)/300
     
     %--- "Cut" one sub-frame's bits ---------------------------------------
     subframe_ori = bits(300*(i-1)+1 : 300*i);
-%     if (subframe(1:11)*preamble_bits < 5)
+%     if (subframe(1:11) * preamble_bits < 5)
 %         subframe = ~subframe;
-%     endq
+%     end
 %     [subframe(16:30),~] = BCH(subframe(16:30)');
     %--- deinterleave --------------------------
     subframe = zeros(1,300);
@@ -99,7 +99,7 @@ for i = 1 : length(bits)/300
             eph(Pnum).Almanac.Omega_dot = twosComp2dec([subframe(206) subframe(211:221) subframe(226:230)]) * 2^(-38) * bdsPi;
             eph(Pnum).Almanac.omega     = twosComp2dec([subframe(231:236) subframe(241:251) subframe(256:262)]) * 2^(-23) * bdsPi;
             eph(Pnum).Almanac.M_0       = twosComp2dec([subframe(263:266) subframe(271:281) subframe(286:294)]) * 2^(-23);
-%         case 5  %--- It is subframe 5 -------------------------------------
+        case 5  %--- It is subframe 5 -------------------------------------
 %             Pnum            = bin2dec(subframe(48:54));
 %             if Pnum >= 1 && Pnum <= 6
 %                 AmEpID(Pnum)    = subframe(295:296);
@@ -122,7 +122,7 @@ for i = 1 : length(bits)/300
 %                 switch Pnum
 %                     case 7
 %                 end
-            end
+%             end
     end % switch subframeID ...
     
 end % for all 5 sub-frames ...
