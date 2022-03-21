@@ -15,7 +15,6 @@ num_pack_err_chase = zeros(length(ebno_vec), 1);
 num_runs = zeros(length(ebno_vec), 1);
 
 enc = comm.BCHEncoder(15,11,'X^4 + X + 1');
-bpskModulator = comm.BPSKModulator;
 
 
 tic
@@ -38,7 +37,7 @@ for i_run = 1 : max_runs
         info_bch(15*(ii-1)+16 : 15*ii+15) = step(enc, info(11*(ii-1)+16 : 11*ii+16-1).');
     end  %模拟北斗D1电文中一帧的数据作为一个数据包
     
-    bpsk = bpskModulator(info_bch');  % 调制
+    bpsk = 1 - 2 * info_bch;  % bpsk调制
     for i_ebno = 1 : length(ebno_vec)
 %         y = bpsk + N0;
 %         sigma = 1/sqrt(2 * 11/15) * 10^(-ebno_vec(i_ebno)/20);

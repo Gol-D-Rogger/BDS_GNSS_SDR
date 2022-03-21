@@ -1,7 +1,7 @@
 function eph = D1NavSolveAPP(filepath)
 %filepath = 'F:\MyProject\MatlabProject\Beidou\BDS_GNSS_SDR\navInHex.txt';
 
-subframe_num = 10000;
+subframe_num = 1000;
 
 navFile = fopen(filepath,'rt');
 navCell = textscan(navFile,'%s',subframe_num);

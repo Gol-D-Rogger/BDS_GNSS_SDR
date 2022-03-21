@@ -1,8 +1,11 @@
 ebno_vec = 2:1:8;
-max_runs = 1000;
-N=255;
-k=239;  
-qnumber=[2,4];%最不可靠位数
+max_runs = 10000;
+% N=255;
+% k=239;  
+% qnumber=[2,4];%最不可靠位数
+N=15;
+k=11;  
+qnumber=2;%最不可靠位数
 Eb=1;
 a=zeros(max_runs,length(ebno_vec));
 ber_m=zeros(length(qnumber),length(ebno_vec));
@@ -134,7 +137,7 @@ function [y,err]=pbchdec(x,N,k)
         bit_z=bitxor(bit_z,y(i));
     end
     err=0;
-    if bit_z==1||err_bit>2||err_bit==-1%译码失败
+    if err_bit>2||err_bit==-1%译码失败
         y=x(1:k);%硬译码
         err=1;
     end

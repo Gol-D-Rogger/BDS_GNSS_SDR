@@ -14,8 +14,16 @@ preamble_bits = [1 1 1 0 0 0 1 0 0 1 0];
 global ephNum;
 ephNum = 0;
 % eph = ephD1_structure_init();
+
+h = waitbar(0,'please wait');
+
+lengthnav = length(bits)/300;
+
 %% Decode all 5 sub-frames ================================================
-for i = 1 : length(bits)/300
+for i = 1 : lengthnav
+    
+    str = ['导航电文解析中...', num2str(i/lengthnav*100),'%'];
+    waitbar(i/lengthnav,h,str)
     
     %--- "Cut" one sub-frame's bits ---------------------------------------
     subframe_ori = bits(300*(i-1)+1 : 300*i);
@@ -223,3 +231,4 @@ for i = 1 : length(bits)/300
     end % switch subframeID ...
     
 end % for all 5 sub-frames ...
+delete(h);

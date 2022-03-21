@@ -1,16 +1,16 @@
-function output = BDBCH_SPA(input_frame,H)
+function output = BDBCH_SPA(input_frame,H,llr)
 
-success = 0; % decoding stopping condition
+success = 0; 
 max_iterations = 10; 
 current_iteration = 1;
-SBR = 1.25;
+% SNR = 1.25;
 
  
 p = 0.2; % p is the crossover probability (probability that 1 sent and 0 received for example). Used only if the channel is BSC
 
-current_frame = input_frame;%we initialize the frame on which we will work
-nb_c_nodes = size(H,1); % the number of check nodes (= number of rows)
-nb_v_nodes = size(H,2); % the number of v_nodes (= number of columns)
+current_frame = input_frame;
+nb_c_nodes = size(H,1);
+nb_v_nodes = size(H,2);
 
 
 %--------- error checking  -------------
@@ -21,49 +21,21 @@ if areErrorsPresent == 0
 end
 
 %----------------------------------------------------------------------
-%This is the first iteration of the soft decoding. Since it is not exactly
-%the same than for the next loops, it is put outside the loop;
 
-    disp("currrent frame = ");
-    disp(current_frame);
     
 if success == 0
     
-    % r is the a priori log like hood. Here you can change the function
-    % which represents the channel
-%     r_vector = a_priori_log_likehood(input_frame,p);
-    r_vector = a_priori_log_likehood_AWGN(input_frame,SBR);
-    disp("r=");
-    disp(r_vector);
-    
-    disp ("------------- ITERATION " + current_iteration + " -----------------------")
-    % Mji is the matrix "sent" by v_nodes to c_nodes. For the first iteration, the matrix is different.
+    r_vector = llr;
+%     r_vector = a_priori_log_likehood_AWGN(input_frame,SNR);
     Mji_matrix_first_iteration = generate_Mji_matrix_first_iteration(H, r_vector, nb_c_nodes, nb_v_nodes);
-    disp("M =");
-    disp(Mji_matrix_first_iteration);
-    
-    % Eji is the matrix of extrinsic probabilities, computed by v_nodes
     Eji_matrix = generate_Eji_matrix(Mji_matrix_first_iteration,nb_c_nodes, nb_v_nodes);
-    disp("E =");
-    disp(Eji_matrix);
-   
-    %L is the new log likehood ratio. Computed by v_nodes
     Lj_vector = generate_Lj_vector(r_vector, Eji_matrix, nb_v_nodes);
-    disp("L =");
-    disp(Lj_vector);
+    current_frame = update_frame(Lj_vector, nb_v_nodes);   
     
-    %finally, updating the frame with the new LLR
-    current_frame = update_frame(Lj_vector, nb_v_nodes);
-    disp("current frame =");
-    disp(current_frame);
-    
-    
-    %We check again if all the errors are corrected
+    %check again if all the errors are corrected
     areErrorsPresent = check_errors(H, current_frame);
     if areErrorsPresent == 0
         success = 1;
-    else
-        disp("still errors");
     end
     
     
@@ -73,48 +45,27 @@ end
 
 
 %-------- DECODE LOOP ---------------
-% exactly the same as above, but in a loop and Mji_matrix instead of
-% Mji_matrix_first_iteration
+
 while success==0 && current_iteration<max_iterations
     
-    current_iteration = current_iteration + 1;
-    
-    disp ("------------- ITERATION " + current_iteration + " -----------------------")
-    
+    current_iteration = current_iteration + 1;   
     Mji_matrix = generate_Mji_matrix(H, Eji_matrix, r_vector, nb_c_nodes, nb_v_nodes);
-    disp("M =");
-    disp(Mji_matrix);
-
     Eji_matrix = generate_Eji_matrix(Mji_matrix,nb_c_nodes, nb_v_nodes);
-    disp("E =");
-    disp(Eji_matrix);
-   
     Lj_vector = generate_Lj_vector(r_vector, Eji_matrix, nb_v_nodes);
-    disp("L =");
-    disp(Lj_vector);
-    
     current_frame = update_frame(Lj_vector, nb_v_nodes);
-    disp("current frame =");
-    disp(current_frame);
-    
+   
     areErrorsPresent = check_errors(H, current_frame);
     if areErrorsPresent == 0
         success = 1;
-    else
-        disp("still errors");
     end
     
     
 end
     if success ~= 1
-        disp("correction failed");
-    else
-        disp ("correction success");
+%         disp("correction failed");
     end
     
     output = current_frame;
-    disp ("output = ");
-    disp(output);
 end
 
 
@@ -150,10 +101,10 @@ end
 
 % example of function to get the LLR of AWGN channel. Signal to Noise Ratio
 % needed
-function r = a_priori_log_likehood_AWGN(input_frame,SBR)
+function r = a_priori_log_likehood_AWGN(input_frame,SNR)
     r = zeros(1,size(input_frame,2));
     for i = 1: size(input_frame,2)
-        r(i) = 4 * input_frame(i) * SBR;
+        r(i) = 4 * input_frame(i) * SNR;%LLR computation
     end
 end
 

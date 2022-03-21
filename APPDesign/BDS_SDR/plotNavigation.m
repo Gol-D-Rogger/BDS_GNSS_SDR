@@ -99,7 +99,10 @@ if (~isempty(navSolutions))
     handles(3, 2) = subplot(4, 2, [6, 8]);    
  
 %% Plot all figures =======================================================
- 
+    handles(1, 1).Position = [0.13,0.588172043010753,0.775,0.376827956989247];
+    handles(3, 1).Position = [0.13,0.09,0.334659090909091,0.376827956989247];
+    handles(3, 2).Position = [0.570340909090909,0.09,0.334659090909091,0.376827956989247];
+
     %--- Coordinate differences in UTM system -----------------------------
     plot(handles(1, 1), [(navSolutions.E - refCoord.E)', ...
                          (navSolutions.N - refCoord.N)',...
